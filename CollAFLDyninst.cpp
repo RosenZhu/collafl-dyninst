@@ -60,7 +60,7 @@ BPatch_function *initAflForkServer;
 
 const char *instLibrary = "./libCollAFLDyninst.so";
 
-static const char *OPT_STR = "i:o:l:vb:E:r:";
+static const char *OPT_STR = "i:o:v";
 static const char *USAGE = " -i <binary> -o <binary>\n \
     Analyse options:\n \
             -i: Input binary \n \
@@ -237,9 +237,9 @@ bool edgeInstrument(BPatch_binaryEdit * appBin, BPatch_image *appImage,
 
         Dyninst::Address addr = insns.back().second;  //addr: equal to offset when it's binary rewrite
         Dyninst::InstructionAPI::Instruction insn = insns.back().first; 
-        //Dyninst::InstructionAPI::Operation op = insn.getOperation();
+        Dyninst::InstructionAPI::Operation op = insn.getOperation();
         Dyninst::InstructionAPI::InsnCategory category = insn.getCategory();
-        //Dyninst::InstructionAPI::Expression::Ptr expt = insn.getControlFlowTarget();
+        Dyninst::InstructionAPI::Expression::Ptr expt = insn.getControlFlowTarget();
 
         //pre-determined edges
         vector<BPatch_edge *> outgoingEdge;
@@ -342,15 +342,15 @@ int main (int argc, char **argv){
         return EXIT_FAILURE;
     }
 
-    if(!instrumentLibraries.empty()){
-        for(auto lbit = instrumentLibraries.begin(); lbit != instrumentLibraries.end(); lbit++){
-            if (!appBin->loadLibrary ((*lbit).c_str())) {
-                cerr << "Failed to open instrumentation library " << *lbit << endl;
-                cerr << "It needs to be located in the current working directory." << endl;
-                return EXIT_FAILURE;
-            }
-        }
-    }
+    // if(!instrumentLibraries.empty()){
+    //     for(auto lbit = instrumentLibraries.begin(); lbit != instrumentLibraries.end(); lbit++){
+    //         if (!appBin->loadLibrary ((*lbit).c_str())) {
+    //             cerr << "Failed to open instrumentation library " << *lbit << endl;
+    //             cerr << "It needs to be located in the current working directory." << endl;
+    //             return EXIT_FAILURE;
+    //         }
+    //     }
+    // }
 
     BPatch_image *appImage = appBin->getImage ();
 

@@ -4142,7 +4142,7 @@ static void show_stats(void) {
 
   sprintf(tmp + banner_pad, "%s " cLCY VERSION cLGN
           " (%s)",  crash_mode ? cPIN "peruvian were-rabbit" : 
-          cYEL "afl", use_banner);
+          cYEL "collafl", use_banner);
 
   SAYF("\n%s\n\n", tmp);
 
@@ -8007,12 +8007,6 @@ int main(int argc, char** argv) {
   if (!out_file) setup_stdio_file();
 
   check_binary(argv[optind]);
-  
-    // instrument binary; get the value of Dyn_Map_Size
-  //instrument_binary(); 
-  // malloc memories for maps
-  //malloc_maps();
-  //setup_shm();
   
 
   start_time = get_cur_time();
