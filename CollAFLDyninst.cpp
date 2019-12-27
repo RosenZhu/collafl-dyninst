@@ -36,10 +36,10 @@ using namespace Dyninst;
 
 //hash table length
 
-static u32 num_conditional, // the number of total conditional edges
-            num_indirect,   // the number of total indirect edges
-            max_map_size, // the number of all edges, including potential indirect edges
-            AllEdge_id; // assign unique id for each conditional edges
+// static u32 num_conditional, // the number of total conditional edges
+//             num_indirect,   // the number of total indirect edges
+//             max_map_size, // the number of all edges, including potential indirect edges
+static u32 AllEdge_id = 0; // assign unique id for each conditional edges
 
 
 //cmd line options
@@ -252,6 +252,7 @@ bool edgeInstrument(BPatch_binaryEdit * appBin, BPatch_image *appImage,
             if (edge_type == CondJumpTaken || edge_type == CondJumpNottaken || edge_type == NonJump || edge_type == UncondJump){
                 instrumentCondition(appBin, ConditionJump, (*edge_iter)->getPoint(), addr, AllEdge_id);
                 AllEdge_id++;
+                if (AllEdge_id >= MAP_SIZE) AllEdge_id = MAP_SIZE - 1;
             }
             // if ((*edge_iter)->getType() == CondJumpTaken ||(*edge_iter)->getType() == NonJump || (*edge_iter)->getType() == UncondJump){
             //     instrumentCondition(appBin, ConditionJump, (*edge_iter)->getPoint(), addr, AllEdge_id);
@@ -273,12 +274,14 @@ bool edgeInstrument(BPatch_binaryEdit * appBin, BPatch_image *appImage,
                     appImage->findPoints(addr, callPoints); //use callPoints[0] as the instrument point
                     instrumentIndirect(appBin, IndirectEdges, callPoints[0], addr,  AllEdge_id);
                     AllEdge_id++;
+                    if (AllEdge_id >= MAP_SIZE) AllEdge_id = MAP_SIZE - 1;
                 }
                 else if(category == Dyninst::InstructionAPI::c_BranchInsn) {//indirect jump
                     vector<BPatch_point *> callPoints;
                     appImage->findPoints(addr, callPoints); //use callPoints[0] as the instrument point
                     instrumentIndirect(appBin, IndirectEdges, callPoints[0], addr, AllEdge_id);
                     AllEdge_id++;
+                    if (AllEdge_id >= MAP_SIZE) AllEdge_id = MAP_SIZE - 1;
                                 
                 }
                 else if(category == Dyninst::InstructionAPI::c_ReturnInsn) {
@@ -287,6 +290,7 @@ bool edgeInstrument(BPatch_binaryEdit * appBin, BPatch_image *appImage,
 
                     instrumentIndirect(appBin, IndirectEdges, retPoints[0], addr, AllEdge_id);
                     AllEdge_id++;
+                    if (AllEdge_id >= MAP_SIZE) AllEdge_id = MAP_SIZE - 1;
                 }
  
             }
