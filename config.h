@@ -314,9 +314,16 @@
    after changing this - otherwise, SEGVs may ensue. */
 
 #define MAP_SIZE_POW2       16
+#define MAP_SIZE_POW2128       17
+#define MAP_SIZE_POW2256       18
+#define MAP_SIZE_POW2512       19
 
 // MAP_SIZE- rosen: need to change depending on the size of target program
 #define MAP_SIZE            (1 << MAP_SIZE_POW2)
+
+#define MAP_SIZE128            (1 << MAP_SIZE_POW2128)
+#define MAP_SIZE256            (1 << MAP_SIZE_POW2256)
+#define MAP_SIZE512            (1 << MAP_SIZE_POW2512)
 
 
 /* Maximum allocator request size (keep well under INT_MAX): */

@@ -51,8 +51,9 @@ DOC_PATH    = $(PREFIX)/share/doc/afl
 MISC_PATH   = $(PREFIX)/share/afl
 
 # PROGS intentionally omit as, which gets installed elsewhere.
+# afl-showmap 
 
-PROGS       = collafl libCollAFLDyninst CollAFLDyninst afl-showmap
+PROGS       = collafl64 libCollAFLDyninst64 CollAFLDyninst64 collafl128 libCollAFLDyninst128 CollAFLDyninst128 collafl256 libCollAFLDyninst256 CollAFLDyninst256
 SH_PROGS    = afl-plot
 
 CFLAGS     ?= -O3 -funroll-loops
@@ -86,19 +87,36 @@ endif
 
 # CollAFL dependencies
 
-collafl: collafl.c $(COMM_HDR) | test_x86
+collafl64: collafl64.c $(COMM_HDR) | test_x86
 	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
 
-libCollAFLDyninst: libCollAFLDyninst.cpp
-	$(CXX) $(CXXFLAGS) -o libCollAFLDyninst.so libCollAFLDyninst.cpp $(LDFLAGS) $(LIBFLAGS)
+libCollAFLDyninst64: libCollAFLDyninst64.cpp
+	$(CXX) $(CXXFLAGS) -o libCollAFLDyninst64.so libCollAFLDyninst64.cpp $(LDFLAGS) $(LIBFLAGS)
 
-CollAFLDyninst: CollAFLDyninst.cpp
-	$(CXX) -Wl,-rpath-link,$(DYN_ROOT)/lib -Wl,-rpath-link,$(DYN_ROOT)/include $(CXXFLAGS) -o CollAFLDyninst CollAFLDyninst.cpp $(LDFLAGS)
+CollAFLDyninst64: CollAFLDyninst64.cpp
+	$(CXX) -Wl,-rpath-link,$(DYN_ROOT)/lib -Wl,-rpath-link,$(DYN_ROOT)/include $(CXXFLAGS) -o CollAFLDyninst64 CollAFLDyninst64.cpp $(LDFLAGS)
 
-
-
-afl-showmap: afl-showmap.c $(COMM_HDR) | test_x86
+collafl128: collafl128.c $(COMM_HDR) | test_x86
 	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
+
+libCollAFLDyninst128: libCollAFLDyninst128.cpp
+	$(CXX) $(CXXFLAGS) -o libCollAFLDyninst128.so libCollAFLDyninst128.cpp $(LDFLAGS) $(LIBFLAGS)
+
+CollAFLDyninst128: CollAFLDyninst128.cpp
+	$(CXX) -Wl,-rpath-link,$(DYN_ROOT)/lib -Wl,-rpath-link,$(DYN_ROOT)/include $(CXXFLAGS) -o CollAFLDyninst128 CollAFLDyninst128.cpp $(LDFLAGS)
+
+collafl256: collafl256.c $(COMM_HDR) | test_x86
+	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
+
+libCollAFLDyninst256: libCollAFLDyninst256.cpp
+	$(CXX) $(CXXFLAGS) -o libCollAFLDyninst256.so libCollAFLDyninst256.cpp $(LDFLAGS) $(LIBFLAGS)
+
+CollAFLDyninst256: CollAFLDyninst256.cpp
+	$(CXX) -Wl,-rpath-link,$(DYN_ROOT)/lib -Wl,-rpath-link,$(DYN_ROOT)/include $(CXXFLAGS) -o CollAFLDyninst256 CollAFLDyninst256.cpp $(LDFLAGS)
+
+
+# afl-showmap: afl-showmap.c $(COMM_HDR) | test_x86
+# 	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
 
 
 
