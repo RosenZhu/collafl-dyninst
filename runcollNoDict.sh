@@ -9,12 +9,12 @@ export AFL_NO_UI=1
 # $3: path to target binary;  ${@:4}: parameters running targets
 # bash runfuzz.sh ../outputs/becread1 ../target-bins/untracer_bins/binutils/readelf ../target-bins/untracer_bins/binutils/seed_dir/ -a @@
 
-
 OUTDIR=${1}_collafl
 SEEDS=$2
 TARGET=$3
 VERSION=$4
-PARAMS=`echo ${@:5}`
+FUZZTIME=$5
+PARAMS=`echo ${@:6}`
 
 NAME=`echo ${TARGET##*/}`
 INSTNAME=${NAME}_inst
@@ -22,16 +22,18 @@ INSTNAME=${NAME}_inst
 
 mkdir $OUTDIR
 ./CollAFLDyninst${VERSION} -i $TARGET  -o  ${OUTDIR}/${INSTNAME}
+sleep 1
 
-COMMD="./collafl${VERSION} -i $SEEDS -o ${OUTDIR}/out -t 500 -m 1G -- ${OUTDIR}/$INSTNAME $PARAMS"
+COMMD="./collafl${VERSION} -i $SEEDS -o ${OUTDIR}/out -t 500 -m 1G -- ${OUTDIR}/${INSTNAME} $PARAMS"
 
 (
     ${COMMD}
 )&
-sleep 1m
+sleep $FUZZTIME
 # ctrl-c
 ps -ef | grep "$COMMD" | grep -v 'grep' | awk '{print $2}' | xargs kill -2
 
+rm ${OUTDIR}/${INSTNAME}
 chmod 777 -R $OUTDIR
 sleep 1
 
