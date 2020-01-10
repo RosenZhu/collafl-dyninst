@@ -245,25 +245,33 @@ bool edgeInstrument(BPatch_binaryEdit * appBin, BPatch_image *appImage,
         vector<BPatch_edge *> outgoingEdge;
         (*bb_iter)->getOutgoingEdges(outgoingEdge);
         vector<BPatch_edge *>::iterator edge_iter;
-        u8 edge_type;
+        //u8 edge_type;
 
         for(edge_iter = outgoingEdge.begin(); edge_iter != outgoingEdge.end(); ++edge_iter) {
-            edge_type = (*edge_iter)->getType();
-            if (edge_type == CondJumpTaken || edge_type == CondJumpNottaken || edge_type == NonJump || edge_type == UncondJump){
+            //edge_type = (*edge_iter)->getType();
+            if ((*edge_iter)->getType() == CondJumpTaken){
                 instrumentCondition(appBin, ConditionJump, (*edge_iter)->getPoint(), addr, AllEdge_id);
                 AllEdge_id++;
-                if (AllEdge_id >= MAP_SIZE) AllEdge_id = MAP_SIZE - 1;
+                if (AllEdge_id >= MAP_SIZE) AllEdge_id = random() % MAP_SIZE;
             }
-            // if ((*edge_iter)->getType() == CondJumpTaken ||(*edge_iter)->getType() == NonJump || (*edge_iter)->getType() == UncondJump){
-            //     instrumentCondition(appBin, ConditionJump, (*edge_iter)->getPoint(), addr, AllEdge_id);
-            //     AllEdge_id++;  //assign a new id fot the next conditional edge
-            // }
-            // else if ((*edge_iter)->getType() == CondJumpNottaken){
-            //     instrumentCondition(appBin, ConditionJump, (*edge_iter)->getPoint(), addr, AllEdge_id);
-            //     AllEdge_id++;
-            // }        
+            else if ((*edge_iter)->getType() == CondJumpNottaken){
+                instrumentCondition(appBin, ConditionJump, (*edge_iter)->getPoint(), addr, AllEdge_id);
+                AllEdge_id++;
+                if (AllEdge_id >= MAP_SIZE) AllEdge_id = random() % MAP_SIZE;
+            } 
+            else if ((*edge_iter)->getType() == NonJump){
+                instrumentCondition(appBin, ConditionJump, (*edge_iter)->getPoint(), addr, AllEdge_id);
+                AllEdge_id++;
+                if (AllEdge_id >= MAP_SIZE) AllEdge_id = random() % MAP_SIZE;
+            } 
+            else if ((*edge_iter)->getType() == UncondJump){
+                instrumentCondition(appBin, ConditionJump, (*edge_iter)->getPoint(), addr, AllEdge_id);
+                AllEdge_id++;
+                if (AllEdge_id >= MAP_SIZE) AllEdge_id = random() % MAP_SIZE;
+            }    
             
         }
+
 
         //indirect edges
         for(Dyninst::InstructionAPI::Instruction::cftConstIter iter = insn.cft_begin(); iter != insn.cft_end(); ++iter) {
@@ -274,14 +282,14 @@ bool edgeInstrument(BPatch_binaryEdit * appBin, BPatch_image *appImage,
                     appImage->findPoints(addr, callPoints); //use callPoints[0] as the instrument point
                     instrumentIndirect(appBin, IndirectEdges, callPoints[0], addr,  AllEdge_id);
                     AllEdge_id++;
-                    if (AllEdge_id >= MAP_SIZE) AllEdge_id = MAP_SIZE - 1;
+                    if (AllEdge_id >= MAP_SIZE) AllEdge_id = random() % MAP_SIZE;
                 }
                 else if(category == Dyninst::InstructionAPI::c_BranchInsn) {//indirect jump
                     vector<BPatch_point *> callPoints;
                     appImage->findPoints(addr, callPoints); //use callPoints[0] as the instrument point
                     instrumentIndirect(appBin, IndirectEdges, callPoints[0], addr, AllEdge_id);
                     AllEdge_id++;
-                    if (AllEdge_id >= MAP_SIZE) AllEdge_id = MAP_SIZE - 1;
+                    if (AllEdge_id >= MAP_SIZE) AllEdge_id = random() % MAP_SIZE;
                                 
                 }
                 else if(category == Dyninst::InstructionAPI::c_ReturnInsn) {
@@ -290,7 +298,7 @@ bool edgeInstrument(BPatch_binaryEdit * appBin, BPatch_image *appImage,
 
                     instrumentIndirect(appBin, IndirectEdges, retPoints[0], addr, AllEdge_id);
                     AllEdge_id++;
-                    if (AllEdge_id >= MAP_SIZE) AllEdge_id = MAP_SIZE - 1;
+                    if (AllEdge_id >= MAP_SIZE) AllEdge_id = random() % MAP_SIZE;
                 }
  
             }
