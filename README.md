@@ -25,4 +25,4 @@ export PATH=$PATH:$COLL_PATH
 
 use dyninst to implement CollAFL
 
-    ./CollAFLDyninst64 -i /path/to/target -o /path/to/instrumented/binary
+    ./CollAFLDyninst -i /path/to/target -o /path/to/instrumented/binary
