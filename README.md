@@ -10,7 +10,8 @@ git clone https://github.com/mxz297/dyninst.git
 cd dyninst
 git checkout fuzzing
 ```
-[install instructions](https://github.com/mxz297/dyninst/tree/rerewriting)
+install:
+[install instructions](https://github.com/mxz297/dyninst)
 
 ## environment
 ```
